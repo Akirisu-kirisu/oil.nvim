@@ -67,6 +67,33 @@ M.select_tab = {
   end,
 }
 
+M.mark_file = {
+  desc = "Mark the entry under the cursor",
+  deprecated = false,
+  callback = function()
+    oil.mark()
+  end,
+}
+
+M.open_file_explorer = {
+  desc = "Open the file explorer",
+  callback = function()
+    local path = vim.fn.getcwd()
+    local open_cmd
+
+    if vim.fn.has("win32") == 1 then
+      open_cmd = { "cmd.exe", "/C", "start", path }
+    elseif vim.fn.has("mac") == 1 then
+      open_cmd = { "open", path }
+    else
+      -- Assume Linux
+      open_cmd = { "xdg-open", path }
+    end
+
+    vim.fn.jobstart(open_cmd, { detach = true })
+  end,
+}
+
 M.preview = {
   desc = "Open the entry under the cursor in a preview window, or close the preview window if already open",
   parameters = {
